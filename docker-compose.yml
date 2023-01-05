@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  reverseproxy:
+    image: iiotsuite/nginx
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - "${PROXY_PORT}:80"
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload --with-stream; done & nginx -g "daemon off;"'''
+
+  telegraf:
+    image: telegraf:1.25.0
+    environment:
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
+    restart: always
+    command:
+      - telegraf
+      - --config
+      - http://influx:8086/api/v2/telegrafs/${TELEGRAF_ID}
+      - --watch-config
+      - poll
+    depends_on:
+      - influx
+
+  nodered:
+    image: iiotsuite/nodered
+    build: ./nodered
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Madrid
+      - NODE_RED_ENABLE_PROJECTS=true
+    volumes:
+      - ./data/nodered:/data
+
+  influx:
+    image: influxdb:2.6.0
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Madrid
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUX_USER}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUX_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${ORG_NAME}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${BUCKET_NAME}
+    ports:
+      - "${INFLUX_PORT}:8086"
+    volumes:
+      - ./data/influx:/var/lib/influxdb2
+
+  grafana:
+    image: iiotsuite/grafana
+    build: ./grafana
+    restart: unless-stopped
+    volumes:
+      - ./data/grafana/lib:/var/lib/grafana
