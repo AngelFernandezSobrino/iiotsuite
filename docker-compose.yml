@@ -12,12 +12,12 @@ services:
   telegraf:
     image: telegraf:1.25.0
     environment:
-      - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - INFLUX_TOKEN=${INFLUX_CONFIG_TOKEN}
     restart: always
     command:
       - telegraf
       - --config
-      - http://influx:8086/api/v2/telegrafs/${TELEGRAF_ID}
+      - http://influx:8086/api/v2/telegrafs/${INFLUX_CONFIG_ID}
       - --watch-config
       - poll
     depends_on:
