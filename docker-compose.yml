@@ -34,7 +34,8 @@ services:
       - ./data/nodered:/data
 
   influx:
-    image: influxdb:2.6.0
+    image: iiotsuite/influx
+    build: ./influx
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
