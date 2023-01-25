@@ -34,20 +34,24 @@ services:
       - ./data/nodered:/data
 
   influx:
-    image: iiotsuite/influx
-    build: ./influx
+    image: influxdb:2.6.0
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUX_USER}
-      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUX_PASSWORD}
-      - DOCKER_INFLUXDB_INIT_ORG=${ORG_NAME}
-      - DOCKER_INFLUXDB_INIT_BUCKET=${BUCKET_NAME}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
+      - V1_USERNAME=${V1_USERNAME}
+      - V1_PASSWORD=${V1_PASSWORD}
+
     ports:
       - "${INFLUX_PORT}:8086"
     volumes:
-      - ./data/influx:/var/lib/influxdb2
+      - ./data/influx/influx2:/var/lib/influxdb2
+      - ./data/influx/config:/etc/influxdb2
+      - ./influx/scripts:/docker-entrypoint-initdb.d
 
   grafana:
     image: iiotsuite/grafana
