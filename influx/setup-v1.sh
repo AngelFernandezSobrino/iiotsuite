@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 influx v1 dbrp create \
   --bucket-id ${DOCKER_INFLUXDB_INIT_BUCKET_ID} \
