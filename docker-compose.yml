@@ -26,16 +26,30 @@ services:
   nodered:
     image: iiotsuite/nodered
     build: ./nodered
+    user: root
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
       - NODE_RED_ENABLE_PROJECTS=true
     volumes:
       - ./data/nodered:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://host.docker.internal:27017/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   influx:
     image: iiotsuite/influx
     build: ./influx
+    user: root
     #restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
@@ -52,12 +66,13 @@ services:
     ports:
       - "${INFLUX_PORT}:8086"
     volumes:
-      - ./data/influx/influx2:/var/lib/influxdb2
-      - ./influx/scripts:/docker-entrypoint-initdb.d
+      - ./data/influx:/var/lib/influxdb
+   
 
   grafana:
     image: iiotsuite/grafana
     build: ./grafana
+    user: root
     restart: unless-stopped
     volumes:
       - ./data/grafana/lib:/var/lib/grafana
