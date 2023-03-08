@@ -67,12 +67,15 @@ services:
       - "${INFLUX_PORT}:8086"
     volumes:
       - ./data/influx:/var/lib/influxdb
-   
 
   grafana:
     image: iiotsuite/grafana
     build: ./grafana
     user: root
+    environment:
+      - GF_SERVER_DOMAIN=${DOMAIN}
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT}
+      - GF_SERVER_SERVE_FROM_SUB_PATH=${GRAFANA_SUBPATH}
     restart: unless-stopped
     volumes:
       - ./data/grafana/lib:/var/lib/grafana
