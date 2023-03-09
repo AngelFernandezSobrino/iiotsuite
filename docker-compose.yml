@@ -38,7 +38,7 @@ services:
     volumes:
       - ./data/chronograf:/var/lib/chronograf
     ports:
-      - "10000:10000"
+      - "8888:8888"
 
   nodered:
     image: iiotsuite/nodered
@@ -50,16 +50,6 @@ services:
       - NODE_RED_ENABLE_PROJECTS=true
     volumes:
       - ./data/nodered:/data
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_URL: mongodb://host.docker.internal:27017/
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
