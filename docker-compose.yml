@@ -23,6 +23,23 @@ services:
     depends_on:
       - influx
 
+  kapacitor:
+    image: kapacitor
+    environment:
+      KAPACITOR_HOSTNAME: kapacitor
+      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+    volumes:
+      - ./data/kapacitor:/var/lib/kapacitor
+    ports:
+      - "9092:9092"
+
+  chronograf:
+    image: chronograf
+    volumes:
+      - ./data/chronograf:/var/lib/chronograf
+    ports:
+      - "10000:10000"
+
   nodered:
     image: iiotsuite/nodered
     build: ./nodered
