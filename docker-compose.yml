@@ -27,7 +27,7 @@ services:
     image: kapacitor
     environment:
       KAPACITOR_HOSTNAME: kapacitor
-      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+      KAPACITOR_INFLUXDB_0_URLS_0: http://influx:8086
     volumes:
       - ./data/kapacitor:/var/lib/kapacitor
     ports:
