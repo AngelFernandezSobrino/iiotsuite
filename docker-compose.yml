@@ -60,20 +60,18 @@ services:
     #restart: unless-stopped
     environment:
       - TZ=Europe/Madrid
-      - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
       - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}
       - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${DOCKER_INFLUXDB_INIT_BUCKET}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
-      - DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME=iiotsute
-      - V1_USERNAME=${V1_USERNAME}
-      - V1_PASSWORD=${V1_PASSWORD}
 
     ports:
       - "${INFLUX_PORT}:8086"
     volumes:
       - ./data/influx:/var/lib/influxdb
+      - ./data/influx2:/var/lib/influxdb2
+      - ./data/influx2config:/etc/influxdb2
 
   grafana:
     image: iiotsuite/grafana
