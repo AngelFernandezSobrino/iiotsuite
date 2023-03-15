@@ -11,6 +11,8 @@ services:
 
   telegraf:
     image: telegraf:1.25.0
+    profiles:
+      - telegraf
     environment:
       - INFLUX_TOKEN=${INFLUX_CONFIG_TOKEN}
     restart: always
@@ -25,6 +27,8 @@ services:
 
   kapacitor:
     image: kapacitor
+    profiles:
+      - influx1x
     environment:
       KAPACITOR_HOSTNAME: kapacitor
       KAPACITOR_INFLUXDB_0_URLS_0: http://influx:8086
@@ -35,6 +39,8 @@ services:
 
   chronograf:
     image: chronograf
+    profiles:
+      - influx1x
     volumes:
       - ./data/chronograf:/var/lib/chronograf
     ports:
